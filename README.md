@@ -30,6 +30,17 @@ This project will not explicitly implement encryption, credentials, certificates
 
 ### Analysis and Design
 
+There are many reasons why a team would want to have strict control over generative AI within their production.  Among these are:
+
+* Concerns over GenAI exposing them to copy right infringements
+* A personal desire for supporting human artists
+* Protection of their original Intellectual Property from use as training data
+
+The `UsdMediaAuthorshipAPI` schema recommends the IPTC Digital Source Type vocabulary for specifying the class of digital assets with respect to their authorship.  The vocabulary covers assets created "manually" by humans using traditional software applications, assets created using algorithms without training data through to generative techniques trained on vast data sets of existing art work.
+
+What it *doesn't* provide is a digital signature to ensure the USD file is truly authored by the entity specified in the metadata.
+
+More importantly for this project, the schema recommends defaulting to an assumed value of **non-AI** authorship if the metadata is missing or incomplete.
 
 ### Implementation
 
