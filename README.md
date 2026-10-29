@@ -22,6 +22,22 @@ At all times, the system should be able to compute the level of GenAI usage in t
 
 #### Out of Scope:
 
-This project will not explicitly implement encryption, credentials, certificates -- the aim is to demonstrate the coordination of work between humans and agents, and enforce permissions with in teams. 
+This project will not explicitly implement encryption, credentials, certificates -- the aim is to demonstrate the coordination of work between humans and agents through access controls, and the enforcement of permissions with in teams. 
+
+
+### Requirements
+
+
+### Analysis and Design
+
+
+### Implementation
+
+
+### Testing and Evaluation
+
+
+### References
+
 
 
