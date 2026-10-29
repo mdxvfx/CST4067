@@ -36,11 +36,18 @@ There are many reasons why a team would want to have strict control over generat
 * A personal desire for supporting human artists
 * Protection of their original Intellectual Property from use as training data
 
-The `UsdMediaAuthorshipAPI` schema recommends the IPTC Digital Source Type vocabulary for specifying the class of digital assets with respect to their authorship.  The vocabulary covers assets created "manually" by humans using traditional software applications, assets created using algorithms without training data through to generative techniques trained on vast data sets of existing art work.
+The `UsdMediaAuthorshipAPI` schema recommends the [IPTC Digital Source Type](https://cv.iptc.org/newscodes/digitalsourcetype/) vocabulary for specifying the class of digital assets with respect to their authorship.  The vocabulary covers assets created "manually" by humans using traditional software applications `digitalCreation`, assets created using algorithms without training data `algorithmicMedia`, through to generative techniques trained on vast data sets of existing art work `trainedAlgorithmicMedia`.
 
 What it *doesn't* provide is a digital signature to ensure the USD file is truly authored by the entity specified in the metadata.
 
-More importantly for this project, the schema recommends defaulting to an assumed value of **non-AI** authorship if the metadata is missing or incomplete.
+More importantly for this project, the schema recommends defaulting to an assumed value of **non-AI** authorship if the metadata is missing or incomplete.  For the current project, this is problematic because the aim is to prevent GenAI tainting the production if that is the policy of the team.  So, in this system, USD with unknown authorship will be treated as if it was GenAI.
+
+For defining and reasoning over Access Control Policies the project will use the `cedarpy` python binding to the [Cedar Policy](cedarpolicy.com) engine.
+
+Cedar allows **Role Based Access Control** as well as **Attribute Based Access Control**.
+
+
+
 
 ### Implementation
 
