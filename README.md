@@ -28,25 +28,27 @@ This project will not explicitly implement encryption, credentials, certificates
 ### Requirements
 
 
-### Analysis and Design
-
 There are many reasons why a team would want to have strict control over generative AI within their production.  Among these are:
 
 * Concerns over GenAI exposing them to copy right infringements
 * A personal desire for supporting human artists
 * Protection of their original Intellectual Property from use as training data
 
-The `UsdMediaAuthorshipAPI` schema recommends the [IPTC Digital Source Type](https://cv.iptc.org/newscodes/digitalsourcetype/) vocabulary for specifying the class of digital assets with respect to their authorship.  The vocabulary covers assets created "manually" by humans using traditional software applications `digitalCreation`, assets created using algorithms without training data `algorithmicMedia`, through to generative techniques trained on vast data sets of existing art work `trainedAlgorithmicMedia`.
+The `UsdMediaAuthorshipAPI` schema recommends the [IPTC Digital Source Type](https://cv.iptc.org/newscodes/digitalsourcetype/) vocabulary for specifying the class of digital assets with respect to their authorship.  The vocabulary covers assets created "manually" by humans using traditional software applications `digitalCreation`, assets created using conventional, analytical algorithms without training data `algorithmicMedia`, through to generative techniques trained on vast data sets of existing art work `trainedAlgorithmicMedia`.
 
 What it *doesn't* provide is a digital signature to ensure the USD file is truly authored by the entity specified in the metadata.
 
-More importantly for this project, the schema recommends defaulting to an assumed value of **non-AI** authorship if the metadata is missing or incomplete.  For the current project, this is problematic because the aim is to prevent GenAI tainting the production if that is the policy of the team.  So, in this system, USD with unknown authorship will be treated as if it was GenAI.
+More importantly for this project, the schema recommends defaulting to an assumed value of **non-AI** authorship if the metadata is missing or incomplete.  For the current project, this is problematic because the aim is to prevent GenAI tainting the production if that is the policy of the team.  So, in this system, USD with unknown authorship **must** be treated as if it was GenAI.
 
-For defining and reasoning over Access Control Policies the project will use the `cedarpy` python binding to the [Cedar Policy](cedarpolicy.com) engine.
+For defining and reasoning over Access Control Policies the project will use the `cedarpy` python binding to the [Cedar Policy](https://cedarpolicy.com/en) engine.
 
 Cedar allows **Role Based Access Control** as well as **Attribute Based Access Control**.
 
+The current project will need to explore both approaches.  For instance, the USD documents will carry metadata about their creation which needs to be reasoned over.  In addition, the creators / consumers of these documents could either be other humans or agents so there will be restrictions based on which roles are allowed for humans, agents or both.
 
+
+
+### Analysis and Design
 
 
 ### Implementation
