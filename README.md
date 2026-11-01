@@ -65,32 +65,49 @@ Here are three scenarios illustrating the steps in a production involving hybrid
 Hybrid team allows AI for pre-production but *not* for "final pixel" outputs.
 This is most similar to the [Netflix Partner Regulations]() for shows allowed on their streaming platform.
 
-*Allowed* use of [Nano Banana]() for generation of character sheets from human created concept art
+Item 1 (*Allowed*) use of [Nano Banana]() for generation of character sheets from human created concept art
 
-  - Input: `digitalCreation` Image
-  - Output: `trainedAlgorithmicMedia` Image
+  - Input: `iptc::digitalCreation` Image
+  - Output: `iptc::trainedAlgorithmicMedia` Image
   - Restriction: output must not appear in final pixel outputs
     
-*Disallowed* use of [Tripo AI]() to generate 3D mesh from character sheet
+Item 2 (*Disallowed*) use of [Tripo AI]() to generate 3D mesh from character sheet
 
-  - Input: `trainedAlgorithmicMedia` Image
-  - Output: `trainedAlgorithmicMedia` Geometry
+  - Input: `iptc::trainedAlgorithmicMedia` Image
+  - Output: `iptc::trainedAlgorithmicMedia` Geometry
   - Restriction: 
 
-*Allowed* use of Unreal Monocular Metahuman plugin
+Item 3 (*Allowed*) use of Unreal Monocular Metahuman plugin
 
-  - Input: `digitalCreation` Image Sequence
-  - Output: `trainedAlgorithmicMedia` Skeletal Data
+  - Input: `iptc::digitalCapture` Image Sequence
+  - Output: `iptc::trainedAlgorithmicMedia` Skeletal Data
+  - Restriction: output is different form of the input
 
-*Disallowed* use of [NVidia Komodo]() generative animation data
+Item 4 (*Disallowed*) use of [NVidia Komodo]() generative animation data
 
-  - Input: `digitalCreation` Text Prompt
-  - Output: `trainedAlgorithmicMedia` Skeletal Data
+  - Input: `iptc::digitalCreation` Text Prompt
+  - Output: `iptc::trainedAlgorithmicMedia` Skeletal Data
 
-The difference between Item 3 and Item 4 is that Item 3 is not predicting the Skeletal Data directly from its training data.  The input for 3 is an original performance captured as video by the team itself and is therefore part of their production work.  The model is trained for human pose estimation from photos of real people.  Item 4 on the other hand is running inference to generate new Skeletal Data statistically from the Skeletal Data in its training set.  This is a perfect example of the subtle distinctions between algorithmic generation, Machine Learning techniques and Generative AI.  Many teams and productions would consider Item 3 acceptable while Item 4 is not.
+The difference between Item 3 and Item 4 is that Item 3 is not predicting the Skeletal Data directly from its training data.  The input for 3 is an original performance captured as video by the team itself and is therefore part of their production work.  The model is trained for human pose estimation from photos of real people.  This is not considered GenAI as it is more similar to traditional Motion Capture which is an `algorithmicMedia` technique.  Item 4 on the other hand is running inference to generate new Skeletal Data statistically from the Skeletal Data in its training set.  It is not conditioned on a human performance that is part of this team's work.  This is a perfect example of the subtle distinctions between algorithmic generation, Machine Learning techniques and Generative AI.  Many teams and productions would consider Item 3 acceptable while Item 4 not be.
 
 **Scenario 2**
 
+Hybrid team allows use of ML techniques to modify their input media and generate temporary previews (pre-visualisation) versions of shots but *not* generate new frames for final output.
+
+Item 1 (*Allowed*) use [LTX 2.5 Alpha Gen]() to generate mattes for film shots
+
+  - Input: principal photography plates from a film shoot
+  - Output: alpha channel masks isolating the actors
+
+Item 2 (*Allowed*) use of [IC-Relight LoRA]() to integrate live action footage with CG backgrounds
+
+  - Input: principal photography plates from a film shoot
+  - Output: modified plates for compositing with `digitallyCreated` CG background renderings
+
+Item 3 (*Allowed*) [MiniMax H3 restyling](https://comfy.org/hub/workflows/minimax-h3-video-restyling-58a3f7167dba/) preview renderings of shots for reference
+
+  - Input: principal photography plates of grey screen shoots and background reference images `iptc::digitalCapture`
+  - Output: generative AI composites of actors with background `iptc::compositeSynthetic`
 
 **Scenario 3**
 
