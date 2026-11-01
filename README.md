@@ -39,6 +39,12 @@ What it *doesn't* provide is a digital signature to ensure the USD file is truly
 
 More importantly for this project, the schema recommends defaulting to an assumed value of **non-AI** authorship if the metadata is missing or incomplete.  For the current project, this is problematic because the aim is to prevent GenAI tainting the production if that is the policy of the team.  So, in this system, USD with unknown authorship **must** be treated as if it was GenAI.
 
+As well as tracking authorship *via* metadata to monitor the level of generative AI in a film or animation production, the project will propose a system for controlling access to media by both humans and agents in the team.
+
+Current studio teams use production tracking tools to manage the development, completion and delivery of shots for a film or animation.  Tools such as [Shotgrid]() and [Kitsu]() already allow teams to store work in progress in a database for asset tracking, task assignment and shot review.  These systems already provide authentication and access control so that team members can only view or edit media assets they have permissions to use.  Access control to shot data within a film, visual effects or animation production is largely a solved problem.  Where this project adds something new is in the access not only to assets but also to tools.  This is particularly important for agents working within a team which may be allowed to perform some automations on media but not others depending on the policy of the team.
+
+For example, teams might allow an agent to automatically catalogue and label footage by analysing frame contents when it uploads it into the database, but not alter its frame rate even if the frame rate doesn't conform to the rest of the footage in the production, preferring a human team member to do the conforming manually.  These sorts of policies would be enforced by limiting access to specific tools in the pipeline.
+
 For defining and reasoning over Access Control Policies the project will use the `cedarpy` python binding to the [Cedar Policy](https://cedarpolicy.com/en) engine.
 
 Cedar allows **Role Based Access Control** as well as **Attribute Based Access Control**.
@@ -92,26 +98,66 @@ The difference between Item 3 and Item 4 is that Item 3 is not predicting the Sk
 
 **Scenario 2**
 
-Hybrid team allows use of ML techniques to modify their input media and generate temporary previews (pre-visualisation) versions of shots but *not* generate new frames for final output.
+Hybrid team allows use of ML techniques to modify their input media and generate temporary previews (pre-visualisation) versions of shots but *not* generate new frames for final output.  All creative decisions must be supervised by a human team member.
 
-Item 1 (*Allowed*) use [LTX 2.5 Alpha Gen]() to generate mattes for film shots
+Item 5 (*Allowed*) use [LTX 2.5 Alpha Gen]() to generate mattes for film shots
 
-  - Input: principal photography plates from a film shoot
+  - Input: principal photography plates from a film shoot `iptc::digitalCapture`
   - Output: alpha channel masks isolating the actors
 
-Item 2 (*Allowed*) use of [IC-Relight LoRA]() to integrate live action footage with CG backgrounds
+Item 6 (*Allowed*) use of [IC-Relight LoRA]() to integrate live action footage with CG backgrounds
 
-  - Input: principal photography plates from a film shoot
-  - Output: modified plates for compositing with `digitallyCreated` CG background renderings
+  - Input: principal photography plates from a film shoot `iptc::digitalCapture`
+  - Output: modified plates for compositing with `iptc::digitallyCreated` CG background renderings
 
-Item 3 (*Allowed*) [MiniMax H3 restyling](https://comfy.org/hub/workflows/minimax-h3-video-restyling-58a3f7167dba/) preview renderings of shots for reference
+Item 7 (*Allowed*) [Nano Banana]() generated storyboard and shot style frame generated from concept art and screenplay breakdown
+
+  - Input: human made concept art `iptc::digitallyCreated`
+  - Input: human written screen play `iptc::digitallyCreated`
+  - Input: multi camera angle generated shot list `iptc::trainedAlgorithmicMedia` modified by a human artist `iptc::humanEdits`
+  - Output: storyboard of style frames for a film sequence
+  - Restriction: cannot appear as final output pixels for the film
+
+Item 8 (*Allowed*) [MiniMax H3 restyling](https://comfy.org/hub/workflows/minimax-h3-video-restyling-58a3f7167dba/) preview renderings of shots for reference
 
   - Input: principal photography plates of grey screen shoots and background reference images `iptc::digitalCapture`
   - Output: generative AI composites of actors with background `iptc::compositeSynthetic`
+  - Restriction: 
+
+Item 9 (*Disallowed*) [Layout to Render]() clay render to preview composite of a shot from the storyboard
+
+  - Input A: human made `iptc::digitalCreation` 3D block out scene
+  - Input B: Item 5 above created by a human using an approved ML tool
+  - Input C: Item 6 above created automatically by an agent working autonomously
+  - Input D: Item 7 above created under supervision of a human artist
+  - Output: a composite shot of real actors combined with GenAI backgrounds `iptc::compositeSynthetic`
+  - Restriction: disallowed because agents are not allowed to make creative decisions affecting final pixels which is failed by Input C
 
 **Scenario 3**
 
+Hybrid team with agents acting autonomously to prepare input and output media that does not form final pixels.
 
+Item 10 (*Allowed*) [Layout to Render]() clay render to preview composite of a shot from the storyboard
+
+  - Input A: human made `iptc::digitalCreation` 3D block out scene
+  - Input B: Item 5 above created automatically by an agent working autonomously 
+  - Input C: Item 6 above created by a human using an approved ML tool (constitutes final pixels)
+  - Input D: Item 7 above created under supervision of a human artist
+  - Output: a composite shot of real actors combined with GenAI backgrounds `iptc::compositeSynthetic`
+  - Restriction: allowed because agents can work autonomously on work which does not generate final pixels
+
+Item 11 (*Disallowed*) a video edit of all shots which appear in the storyboard (Item 7) generated as above for Item 10 but edited together automatically by an agent
+
+  - Input A: a sequence of shots as generated by Item 10 above, one for each image in a storyboard
+  - Output: an edited video sequence made from those shots
+  - Restriction: disallowed because video editing requires creative control by a human
+
+
+The difference between Item 10 and Item 9 above is that Item 9 includes work which has been modified by an autonomous agent *and* could be visible as part of the final look of the work.  Specifically, Relighting the principal photography changes the look of the actors.  Even though Item 9 is just a preview version of the shot and should not be part of the final film or animation, the alteration of the actor's appearance is a creative decision only allowed for human members of the team.  Item 10 also involves agents autonomously working with the same principal photography (the footage of the actors), however it is creating masks and mattes for isolating the actor from the background (think automatic green screen process).  While this does affect the quality of the final composite, it is not changing the fundamental look of the actor or their performance by generating final pixels which is the policy set in scenario 2 and 3.
+
+**Roles and Access**
+
+As can be seen from the scenarios above, there are many interactions and steps in a hybrid production pipeline where either humans or agents consume input media and generate outputs for use down stream by other workers.  One problem this project addresses is how to define roles
 
 ### Implementation
 
