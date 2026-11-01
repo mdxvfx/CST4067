@@ -20,9 +20,6 @@ A team could be purely human workers with a no GenAI policy, a purely human team
 
 At all times, the system should be able to compute the level of GenAI usage in the production as well as the allowed operations which might "contaminate" the production with disallowed generative outputs based on the extended schema of the USD files themselves.
 
-#### Out of Scope:
-
-This project will not explicitly implement encryption, credentials, certificates -- the aim is to demonstrate the coordination of work between humans and agents through access controls, and the enforcement of permissions with in teams. 
 
 
 ### Requirements
@@ -46,10 +43,29 @@ Cedar allows **Role Based Access Control** as well as **Attribute Based Access C
 
 The current project will need to explore both approaches.  For instance, the USD documents will carry metadata about their creation which needs to be reasoned over.  In addition, the creators / consumers of these documents could either be other humans or agents so there will be restrictions based on which roles are allowed for humans, agents or both.
 
+#### Assumption
+
+USD doesn't directly support video files which is a crucial part of film and animation production, especially in the context of Generative AI workflows.  To allow video and image sequences to be referenced by the production within USD files, a schema is needed.  An unofficial schema "USD for Shots" has been drafted for this project which accounts for video elements.  This schema is assumed to be part of the scenarios and pipelines analysed in this project.
+
+#### Out of Scope:
+
+This project will not explicitly implement encryption, credentials, certificates -- the aim is to demonstrate the coordination of work between humans and agents through access controls, and the enforcement of permissions with in teams. It is assumed that all humans and agents are trusted within the team, that they always write metadata to the USD and no work goes to external contractors with unknown policies.
 
 
 ### Analysis and Design
 
+**Three Scenarios**
+
+Here are three scenarios illustrating the steps in a production involving hybrid teams as examples of the reasoning steps involved.  They each cover hybrid human / agent pipelines as these are the most relevant and interesting for this project.  Pure human teams which ban GenAI just need to track which human created an asset and how they created it and metadata on its own is enough to monitor this.  Similarly, a heavily agent driven team already allows GenAI with minimal or low restrictions.  Hybrid teams are where the policies need to be most clearly defined and reliable.
+
+Scenario 1.
+
+Hybrid team allows AI for pre-production but *not* for "final pixel" outputs.
+This is most similar to the [Netflix Partner Regulations]() for shows allowed on their streaming platform.
+
+Scenario 2.
+
+Scenario 3.
 
 ### Implementation
 
