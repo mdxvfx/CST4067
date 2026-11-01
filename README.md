@@ -5,7 +5,7 @@ This project is submitted as part fulfilment of **MSc Data Science** at Middlese
 
 ### Introduction
 
-Universal Scene Description (USD) is an exchange format developed by Pixar for film and animation productions.  It is designed to allow teams of artists to combine work by publishing 3D models, characters, animations and effects to a common file format which can be assembled into a larger 3D scene or USD `Stage`.  USD files contain 3D objects as `Prims`, organised into Layers which can specify their purpose within the `Stage`.  USD files can reference other USD files as payloads as well as external 3D assets. The final `Stage` is the combined graph of USD layers across all referenced files after their assets and purpose are resolved.
+Universal Scene Description (USD) is an exchange format developed by Pixar for film, visual effects and animation productions.  It is designed to allow teams of artists to combine work by publishing 3D models, characters, animations and effects to a common file format which can be assembled into a larger 3D scene or USD `Stage`.  USD files contain 3D objects as `Prims`, organised into Layers which can specify their purpose within the `Stage`.  USD files can reference other USD files as payloads as well as external 3D assets. The final `Stage` is the combined graph of USD layers across all referenced files after their assets and purpose are resolved.
 
 The USD format can be extended by schema which define new attributes and types.  The latest release of USD, 26.11, includes the schema `UsdMediaAuthorshipAPI` which defines attributes for tagging USD files with metadata specifying the author of the file which could be human or generative AI.
 
@@ -30,6 +30,8 @@ There are many reasons why a team would want to have strict control over generat
 * Concerns over GenAI exposing them to copy right infringements
 * A personal desire for supporting human artists
 * Protection of their original Intellectual Property from use as training data
+
+At the same time, there are potentially many benefits to allowing certain uses of machine learning and generative AI in a film, visual effects or animation pipeline such as the use of agents for pipeline automation tasks.  There is therefore an increasing need for teams to track data flowing through their pipeline to quickly identify authorship.
 
 The `UsdMediaAuthorshipAPI` schema recommends the [IPTC Digital Source Type](https://cv.iptc.org/newscodes/digitalsourcetype/) vocabulary for specifying the class of digital assets with respect to their authorship.  The vocabulary covers assets created "manually" by humans using traditional software applications `digitalCreation`, assets created using conventional, analytical algorithms without training data `algorithmicMedia`, through to generative techniques trained on vast data sets of existing art work `trainedAlgorithmicMedia`.
 
@@ -58,14 +60,41 @@ This project will not explicitly implement encryption, credentials, certificates
 
 Here are three scenarios illustrating the steps in a production involving hybrid teams as examples of the reasoning steps involved.  They each cover hybrid human / agent pipelines as these are the most relevant and interesting for this project.  Pure human teams which ban GenAI just need to track which human created an asset and how they created it and metadata on its own is enough to monitor this.  Similarly, a heavily agent driven team already allows GenAI with minimal or low restrictions.  Hybrid teams are where the policies need to be most clearly defined and reliable.
 
-Scenario 1.
+**Scenario 1**
 
 Hybrid team allows AI for pre-production but *not* for "final pixel" outputs.
 This is most similar to the [Netflix Partner Regulations]() for shows allowed on their streaming platform.
 
-Scenario 2.
+*Allowed* use of [Nano Banana]() for generation of character sheets from human created concept art
 
-Scenario 3.
+  - Input: `digitalCreation` Image
+  - Output: `trainedAlgorithmicMedia` Image
+  - Restriction: output must not appear in final pixel outputs
+    
+*Disallowed* use of [Tripo AI]() to generate 3D mesh from character sheet
+
+  - Input: `trainedAlgorithmicMedia` Image
+  - Output: `trainedAlgorithmicMedia` Geometry
+  - Restriction: 
+
+*Allowed* use of Unreal Monocular Metahuman plugin
+
+  - Input: `digitalCreation` Image Sequence
+  - Output: `trainedAlgorithmicMedia` Skeletal Data
+
+*Disallowed* use of [NVidia Komodo]() generative animation data
+
+  - Input: `digitalCreation` Text Prompt
+  - Output: `trainedAlgorithmicMedia` Skeletal Data
+
+The difference between Item 3 and Item 4 is that Item 3 is not predicting the Skeletal Data directly from its training data.  The input for 3 is an original performance captured as video by the team itself and is therefore part of their production work.  The model is trained for human pose estimation from photos of real people.  Item 4 on the other hand is running inference to generate new Skeletal Data statistically from the Skeletal Data in its training set.  This is a perfect example of the subtle distinctions between algorithmic generation, Machine Learning techniques and Generative AI.  Many teams and productions would consider Item 3 acceptable while Item 4 is not.
+
+**Scenario 2**
+
+
+**Scenario 3**
+
+
 
 ### Implementation
 
